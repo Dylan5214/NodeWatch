@@ -17,18 +17,18 @@ app.add_middleware(
     allow_headers = ["*"]
 )
 # Initialize Sensor Registry
-SENSORS = {
+SENSORS = [
     CPUTemperatureSensor("CPU-01", "Rack A - CPU"),
     MemoryUsageSensor("MEM-01", "Rack A - Memory"),
     CoolingFanSensor("FAN-01", "Rack A - Fan"),
     NetworkThroughputSensor("NET-01", "Rack A - Network"),
-}
+]
 
 latest_readings = {}
 alert_log = deque(maxlen = 100)
 #Dict to convert object to different format for json dumps
 def reading_to_dict(reading) -> dict:
-    {
+    return {
         "computer_id": reading.computer_id,
         "sensor_type": reading.sensor_type,
         "value": reading.value,
