@@ -2,28 +2,63 @@ import { useState, useEffect } from "react"
 
 function App() {
   const [sensors, setSensors] = useState([])
+  const [alerts, setAlerts] = useState([])
 
   useEffect(() => {
     const es = new EventSource("http://localhost:8000/stream")
-  
+
     es.onmessage = (e) => {
-    setSensors(JSON.parse(e.data))
+      setSensors(JSON.parse(e.data))
+    }
+
+    const fetchAlerts = () => {
+      fetch("http://localhost:8000/alerts")
+        .then(res => res.json())
+        .then(data => setAlerts(data))
+    }
+
+    fetchAlerts()
+    const interval = setInterval(fetchAlerts, 2000)
+
+    return () => {
+      es.close()
+      clearInterval(interval)
+    }
+  }, [])
+
+  const sensorDisplay = {
+    CPUTemperatureSensor:      { label: "CPU Temperature", icon: "🖥️" },
+    MemoryUsageSensor:         { label: "Memory Usage",    icon: "💾" },
+    CoolingFanSensor:          { label: "Cooling Fan",     icon: "🌀" },
+    NetworkThroughputSensor:   { label: "Network",         icon: "📡" },
   }
 
-  return () => es.close()
-}, [])
   return (
     <div className="dashboard">
       <h1>NodeWatch</h1>
       <div className="sensor-grid">
         {sensors.map(sensor => (
           <div key={sensor.computer_id} className={`sensor-card ${sensor.status}`}>
-            <h2>{sensor.sensor_type}</h2>
+            <h2>{sensorDisplay[sensor.sensor_type]?.icon} {sensorDisplay[sensor.sensor_type]?.label}</h2>
             <p className="sensor-id">{sensor.computer_id}</p>
             <p className="sensor-value">{sensor.value} {sensor.unit}</p>
             <p className="sensor-status">{sensor.status}</p>
           </div>
         ))}
+      </div>
+      <div className="alert-log">
+        <h2>Alert Log</h2>
+        {alerts.length === 0 ? (
+          <p className="no-alerts">No alerts</p>
+        ) : (
+          alerts.map((alert, i) => (
+            <div key={i} className={`alert-item ${alert.status}`}>
+              <span>{alert.computer_id}</span>
+              <span>{alert.value}{alert.unit}</span>
+              <span>{alert.status.toUpperCase()}</span>
+            </div>
+          ))
+        )}
       </div>
     </div>
   )

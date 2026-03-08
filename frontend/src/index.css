@@ -78,3 +78,42 @@ h1 {
 .sensor-card.critical .sensor-status {
   color: #ef4444;
 }
+
+.alert-log {
+  margin-top: 2rem;
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.alert-log h2 {
+  color: #e0e0e0;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.alert-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #1f2937;
+  font-size: 0.85rem;
+}
+
+.alert-item.warning {
+  color: #f59e0b;
+}
+
+.alert-item.critical {
+  color: #ef4444;
+}
+
+.no-alerts {
+  color: #6b7280;
+  font-size: 0.85rem;
+}
