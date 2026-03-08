@@ -117,3 +117,17 @@ h1 {
   color: #6b7280;
   font-size: 0.85rem;
 }
+
+.connection-status {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  margin-left: 1rem;
+}
+
+.connection-status.online {
+  color: #00ff99;
+}
+
+.connection-status.offline {
+  color: #ef4444;
+}

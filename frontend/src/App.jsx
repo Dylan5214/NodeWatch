@@ -3,23 +3,34 @@ import { useState, useEffect } from "react"
 function App() {
   const [sensors, setSensors] = useState([])
   const [alerts, setAlerts] = useState([])
+  const [connected, setConnected] = useState(false)
+
 
   useEffect(() => {
     const es = new EventSource("http://localhost:8000/stream")
-
+  
+    es.onopen = () => setConnected(true)
+  
     es.onmessage = (e) => {
+      setConnected(true)
       setSensors(JSON.parse(e.data))
     }
-
+  
+    es.onerror = () => {
+      if (es.readyState === EventSource.CLOSED) {
+        setConnected(false)
+      }
+    }
+  
     const fetchAlerts = () => {
       fetch("http://localhost:8000/alerts")
         .then(res => res.json())
         .then(data => setAlerts(data))
     }
-
+  
     fetchAlerts()
     const interval = setInterval(fetchAlerts, 2000)
-
+  
     return () => {
       es.close()
       clearInterval(interval)
@@ -36,6 +47,9 @@ function App() {
   return (
     <div className="dashboard">
       <h1>NodeWatch</h1>
+        <span className={`connection-status ${connected ? "online" : "offline"}`}>
+          {connected ? "● LIVE" : "● DISCONNECTED"}
+        </span>
       <div className="sensor-grid">
         {sensors.map(sensor => (
           <div key={sensor.computer_id} className={`sensor-card ${sensor.status}`}>
