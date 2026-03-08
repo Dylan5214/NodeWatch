@@ -10,7 +10,7 @@ class SensorReading:
     sensor_type: str # Type of sensor
     value: float # Sensor reading value
     unit: str # Unit of measurement (°C, %, etc.)
-    status: str # Status of reading ("noraml", "warning", etc.)
+    status: str # Status of reading ("normal", "warning", etc.)
     timestamp: float # Time of reading (epoch time)
 
 # Sensor Class containing all logic shared between sensors
