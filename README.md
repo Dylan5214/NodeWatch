@@ -32,8 +32,18 @@ npm run dev
 ### 4. Open the dashboard
 Go to `http://localhost:5173`
 
+### 5. Explore the API
+FastAPI auto-generates interactive API docs at `http://localhost:8000/docs`
+
 ## Features
 -  Live sensor streaming via SSE (updates every 2s), with simulated realistic results
 -  CPU, Memory, Fan, and Network sensors
 -  Warning and critical alert detection
 -  Scrollable alert log panel
+
+## Development
+
+`tests/test.py` runs a quick sanity check on the sensor classes, printing 5 rounds of readings directly to the console without needing the server running.
+```bash
+python tests/test.py
+```
