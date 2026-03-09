@@ -62,14 +62,15 @@ function App() {
       </div>
       <div className="alert-log">
         <h2>Alert Log</h2>
-        {alerts.length === 0 ? (
+          {alerts.length === 0 ? (
           <p className="no-alerts">No alerts</p>
         ) : (
-          alerts.map((alert, i) => (
+          [...alerts].reverse().map((alert, i) => (
             <div key={i} className={`alert-item ${alert.status}`}>
-              <span>{alert.computer_id}</span>
+              <span>{new Date(alert.timestamp * 1000).toLocaleTimeString()}</span>
+              <span>{sensorDisplay[alert.sensor_type]?.label ?? alert.computer_id}</span>
               <span>{alert.value}{alert.unit}</span>
-              <span>{alert.status.toUpperCase()}</span>
+              <span className="alert-badge">{alert.status.toUpperCase()}</span>
             </div>
           ))
         )}
