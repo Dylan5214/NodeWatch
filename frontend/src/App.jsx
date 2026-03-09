@@ -45,37 +45,41 @@ function App() {
   }
 
   return (
-    <div className="dashboard">
-      <h1>NodeWatch</h1>
+    <>
+      <div className="header">
+        <h1>NodeWatch</h1>
         <span className={`connection-status ${connected ? "online" : "offline"}`}>
           {connected ? "● LIVE" : "● DISCONNECTED"}
         </span>
+      </div>
       <div className="sensor-grid">
         {sensors.map(sensor => (
           <div key={sensor.computer_id} className={`sensor-card ${sensor.status}`}>
             <h2>{sensorDisplay[sensor.sensor_type]?.icon} {sensorDisplay[sensor.sensor_type]?.label}</h2>
             <p className="sensor-id">{sensor.computer_id}</p>
             <p className="sensor-value">{sensor.value} {sensor.unit}</p>
-            <p className="sensor-status">{sensor.status}</p>
+            {sensor.status !== "normal" && (
+              <p className="sensor-status">{sensor.status}</p>
+            )}
           </div>
         ))}
       </div>
       <div className="alert-log">
         <h2>Alert Log</h2>
-          {alerts.length === 0 ? (
+        {alerts.length === 0 ? (
           <p className="no-alerts">No alerts</p>
         ) : (
           [...alerts].reverse().map((alert, i) => (
             <div key={i} className={`alert-item ${alert.status}`}>
               <span>{new Date(alert.timestamp * 1000).toLocaleTimeString()}</span>
               <span>{sensorDisplay[alert.sensor_type]?.label ?? alert.computer_id}</span>
-              <span>{alert.value}{alert.unit}</span>
+              <span>{alert.value} {alert.unit}</span>
               <span className="alert-badge">{alert.status.toUpperCase()}</span>
             </div>
           ))
         )}
       </div>
-    </div>
+    </>
   )
 }
 

@@ -10,14 +10,23 @@ body {
   font-family: 'Courier New', monospace;
 }
 
-.dashboard {
-  padding: 2rem;
+css.dashboard {
+  padding: 3rem 10rem;
+  max-width: 1350px;
+  margin: 0 auto;
+}
+
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 h1 {
-  font-size: 2rem;
-  color: #00ff99;
-  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  color: #66D189;
   letter-spacing: 0.2em;
 }
 
@@ -31,7 +40,7 @@ h1 {
   background: #111827;
   border: 1px solid #1f2937;
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 3rem;
 }
 
 .sensor-card.warning {
@@ -46,8 +55,8 @@ h1 {
 .sensor-value {
   font-size: 2rem;
   font-weight: bold;
-  color: #00ff99;
-  margin: 0.5rem 0;
+  color: #66D189;
+  margin: 1rem 0 0.75rem 0;
 }
 
 .sensor-card.warning .sensor-value {
@@ -98,11 +107,20 @@ h1 {
 }
 
 .alert-item {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 120px 1fr 140px 90px;
+  align-items: center;
   padding: 0.5rem 0;
   border-bottom: 1px solid #1f2937;
   font-size: 0.85rem;
+}
+
+.alert-item span:nth-child(3) {
+  text-align: right;
+}
+
+.alert-item span:nth-child(4) {
+  text-align: right;
 }
 
 .alert-item.warning {
@@ -125,7 +143,7 @@ h1 {
 }
 
 .connection-status.online {
-  color: #00ff99;
+  color: #66D189;
 }
 
 .connection-status.offline {
