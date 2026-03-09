@@ -156,3 +156,56 @@ h1 {
   background: rgba(255,255,255,0.05);
   letter-spacing: 0.1em;
 }
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.chart-card {
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 8px;
+  padding: 2rem 2rem 2rem 1rem;
+}
+
+.chart-card h2 {
+  font-size: 1rem;
+  color: #e0e0e0;
+  margin-bottom: 0.25rem;
+}
+
+.chart-current {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.tabs {
+  margin-left: auto;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tab {
+  background: none;
+  border: 1px solid #374151;
+  color: #9ca3af;
+  padding: 0.4rem 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tab.active {
+  border-color: #00ff99;
+  color: #00ff99;
+}
+
+.tab:hover:not(.active) {
+  border-color: #374151;
+  color: #e0e0e0;
+}

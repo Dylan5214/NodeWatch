@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react"
+import Charts from "./Charts"
 
 function App() {
+  const [page, setPage] = useState("dashboard")
   const [sensors, setSensors] = useState([])
   const [alerts, setAlerts] = useState([])
   const [connected, setConnected] = useState(false)
+  const [history, setHistory] = useState({})
 
 
   useEffect(() => {
@@ -13,7 +16,20 @@ function App() {
   
     es.onmessage = (e) => {
       setConnected(true)
-      setSensors(JSON.parse(e.data))
+      const data = JSON.parse(e.data)
+      setSensors(data)
+      setHistory(prev => {
+        const updated = { ...prev }
+        data.forEach(sensor => {
+          const key = sensor.computer_id
+          const prev_readings = updated[key] || []
+          updated[key] = [...prev_readings, {
+            time: new Date(sensor.timestamp * 1000).toLocaleTimeString(),
+            value: sensor.value
+          }].slice(-20) // keep last 20 readings
+        })
+        return updated
+      })
     }
   
     es.onerror = () => {
@@ -51,34 +67,48 @@ function App() {
         <span className={`connection-status ${connected ? "online" : "offline"}`}>
           {connected ? "● LIVE" : "● DISCONNECTED"}
         </span>
+        <nav className="tabs">
+          <button className={`tab ${page === "dashboard" ? "active" : ""}`} onClick={() => setPage("dashboard")}>
+            Dashboard
+          </button>
+          <button className={`tab ${page === "charts" ? "active" : ""}`} onClick={() => setPage("charts")}>
+            Charts
+          </button>
+        </nav>
       </div>
-      <div className="sensor-grid">
-        {sensors.map(sensor => (
-          <div key={sensor.computer_id} className={`sensor-card ${sensor.status}`}>
-            <h2>{sensorDisplay[sensor.sensor_type]?.icon} {sensorDisplay[sensor.sensor_type]?.label}</h2>
-            <p className="sensor-id">{sensor.computer_id}</p>
-            <p className="sensor-value">{sensor.value} {sensor.unit}</p>
-            {sensor.status !== "normal" && (
-              <p className="sensor-status">{sensor.status}</p>
+      {page === "dashboard" ? (
+        <>
+          <div className="sensor-grid">
+            {sensors.map(sensor => (
+              <div key={sensor.computer_id} className={`sensor-card ${sensor.status}`}>
+                <h2>{sensorDisplay[sensor.sensor_type]?.icon} {sensorDisplay[sensor.sensor_type]?.label}</h2>
+                <p className="sensor-id">{sensor.computer_id}</p>
+                <p className="sensor-value">{sensor.value} {sensor.unit}</p>
+                {sensor.status !== "normal" && (
+                  <p className="sensor-status">{sensor.status}</p>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="alert-log">
+            <h2>Alert Log</h2>
+            {alerts.length === 0 ? (
+              <p className="no-alerts">No alerts</p>
+            ) : (
+              [...alerts].reverse().map((alert, i) => (
+                <div key={i} className={`alert-item ${alert.status}`}>
+                  <span>{new Date(alert.timestamp * 1000).toLocaleTimeString()}</span>
+                  <span>{sensorDisplay[alert.sensor_type]?.label ?? alert.computer_id}</span>
+                  <span>{alert.value} {alert.unit}</span>
+                  <span className="alert-badge">{alert.status.toUpperCase()}</span>
+                </div>
+              ))
             )}
           </div>
-        ))}
-      </div>
-      <div className="alert-log">
-        <h2>Alert Log</h2>
-        {alerts.length === 0 ? (
-          <p className="no-alerts">No alerts</p>
-        ) : (
-          [...alerts].reverse().map((alert, i) => (
-            <div key={i} className={`alert-item ${alert.status}`}>
-              <span>{new Date(alert.timestamp * 1000).toLocaleTimeString()}</span>
-              <span>{sensorDisplay[alert.sensor_type]?.label ?? alert.computer_id}</span>
-              <span>{alert.value} {alert.unit}</span>
-              <span className="alert-badge">{alert.status.toUpperCase()}</span>
-            </div>
-          ))
-        )}
-      </div>
+        </>
+      ) : (
+        <Charts sensors={sensors} history={history} />
+      )}
     </>
   )
 }
