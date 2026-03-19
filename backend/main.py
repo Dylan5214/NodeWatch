@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from backend.sensors import CPUTemperatureSensor, MemoryUsageSensor, CoolingFanSensor, NetworkThroughputSensor
+from backend.trend import TrendAnalyzer
 # Creats web server instance
 app = FastAPI(title = "NodeWatch API")
 
@@ -26,6 +27,7 @@ SENSORS = [
 
 latest_readings = {}
 alert_log = deque(maxlen = 100)
+analyzer = TrendAnalyzer()
 #Dict to convert object to different format for json dumps
 def reading_to_dict(reading) -> dict:
     return {
@@ -35,6 +37,8 @@ def reading_to_dict(reading) -> dict:
         "unit": reading.unit,
         "status": reading.status,
         "timestamp": reading.timestamp,
+        "trend": reading.trend,
+        "eta_to_critical": reading.eta_to_critical,
     }
 
 # Calles read on everysensor, updating latest readings
@@ -43,6 +47,13 @@ def poll_sensors() -> list[dict]:
     results = []
     for sensor in SENSORS:
         reading = sensor.read()
+        analyzer.update(reading.computer_id, reading.value, reading.timestamp)
+        trend_data = analyzer.analyze(reading.computer_id, sensor.critical_min)
+
+        reading.trend = trend_data["trend"]
+        reading.eta_to_critical = trend_data["eta_to_critical"]
+
+
         d = reading_to_dict(reading)
         latest_readings[reading.computer_id] = d
         if reading.status in ("warning", "critical"):

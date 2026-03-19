@@ -12,7 +12,8 @@ class SensorReading:
     unit: str # Unit of measurement (°C, %, etc.)
     status: str # Status of reading ("normal", "warning", etc.)
     timestamp: float # Time of reading (epoch time)
-
+    trend: str = "stable"
+    eta_to_critical: int | None = None
 # Sensor Class containing all logic shared between sensors
 class Sensor:
     # Initialize sensor with id and ranges
@@ -65,6 +66,10 @@ class Sensor:
             status = self._get_status(value),
             timestamp = time.time()
         )
+    
+    @property
+    def critical_min(self) -> float:
+        return self.critical_range[0]
 
 # -------------------------------------------
 # Classes for specific sensor types present in Data Centers

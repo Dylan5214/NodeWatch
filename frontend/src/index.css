@@ -209,3 +209,19 @@ h1 {
   border-color: #374151;
   color: #e0e0e0;
 }
+
+.trend-arrow {
+  font-size: 1rem;
+  margin-left: 0.25rem;
+}
+
+.trend-rising  { color: #ef4444; }
+.trend-falling { color: #60a5fa; }
+.trend-stable  { color: #6b7280; }
+
+.eta-badge {
+  font-size: 0.75rem;
+  color: #f59e0b;
+  letter-spacing: 0.05em;
+  margin-top: 0.25rem;
+}
