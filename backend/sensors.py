@@ -66,6 +66,9 @@ class Sensor:
             status = self._get_status(value),
             timestamp = time.time()
         )
+    
+    def critical_min(self) -> float:
+        return self.critical-range[0]
 
 # -------------------------------------------
 # Classes for specific sensor types present in Data Centers
