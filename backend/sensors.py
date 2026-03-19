@@ -67,8 +67,9 @@ class Sensor:
             timestamp = time.time()
         )
     
+    @property
     def critical_min(self) -> float:
-        return self.critical-range[0]
+        return self.critical_range[0]
 
 # -------------------------------------------
 # Classes for specific sensor types present in Data Centers
