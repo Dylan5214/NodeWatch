@@ -83,7 +83,15 @@ function App() {
               <div key={sensor.computer_id} className={`sensor-card ${sensor.status}`}>
                 <h2>{sensorDisplay[sensor.sensor_type]?.icon} {sensorDisplay[sensor.sensor_type]?.label}</h2>
                 <p className="sensor-id">{sensor.computer_id}</p>
-                <p className="sensor-value">{sensor.value} {sensor.unit}</p>
+                <p className="sensor-value">
+                  {sensor.value} {sensor.unit}
+                  <span className={`trend-arrow trend-${sensor.trend}`}>
+                    {sensor.trend === "rising" ? " ↑" : sensor.trend === "falling" ? " ↓" : " →"}
+                  </span>
+                </p>
+                {sensor.eta_to_critical && (
+                  <p className="eta-badge">⚠ critical in ~{sensor.eta_to_critical}s</p>
+                )}
                 {sensor.status !== "normal" && (
                   <p className="sensor-status">{sensor.status}</p>
                 )}
