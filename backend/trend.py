@@ -1,7 +1,7 @@
 from collections import deque
 import time
 
-WINDOW = 10 # Number of readings to analyze
+WINDOW = 20 # Number of readings to analyze
 
 class TrendAnalyzer:
     def __init__(self):
